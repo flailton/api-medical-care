@@ -19,6 +19,9 @@ use App\Http\Controllers\Api;
 Route::post('auth/login', [Api\AuthController::class, 'login']);
 
 Route::group(['middleware' => 'auth.jwt'], function () {
+    Route::apiResource('appointments', Api\AppointmentController::class);
+    Route::apiResource('professionals', Api\ProfessionalController::class);
+    Route::apiResource('procedures', Api\ProcedureController::class);
     Route::apiResource('users', Api\UserController::class);
     Route::post('auth/logout', [Api\AuthController::class, 'logout']);
 });

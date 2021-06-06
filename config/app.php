@@ -170,6 +170,9 @@ return [
          * Application Service Providers...
          */
         App\Providers\UserServiceProvider::class,
+        App\Providers\AppointmentServiceProvider::class,
+        App\Providers\ProcedureServiceProvider::class,
+        App\Providers\ProfessionalServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,

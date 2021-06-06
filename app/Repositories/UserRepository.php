@@ -51,9 +51,10 @@ class UserRepository implements IUserRepository
      */
     public function update($attributes, $id)
     {
-        $this->user->find($id)->update($attributes);
+        $user = $this->user->find($id);
+        $user->update($attributes);
         
-        return $this->user;
+        return $user;
     }
 
     /**
@@ -65,11 +66,6 @@ class UserRepository implements IUserRepository
     public function destroy($id)
     {
         $user = $this->user->find($id);
-
-        $user->wallets()->detach();
-        $user->payments()->detach();
-        $user->receiptments()->detach();
-
         $user->delete();
 
         return $user;
