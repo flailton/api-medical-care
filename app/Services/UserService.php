@@ -39,9 +39,9 @@ class UserService implements IUserService
     {
         $attributes = $data;
         $attributes['password'] = Hash::make($attributes['password']);
-        $response = $this->userRepository->store($attributes);
+        $user = $this->userRepository->store($attributes);
 
-        return $response;
+        return $user;
     }
 
     /**

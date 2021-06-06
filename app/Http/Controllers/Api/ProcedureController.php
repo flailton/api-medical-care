@@ -3,31 +3,28 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Interfaces\IUserService;
+use App\Interfaces\IProcedureService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
-/**
- * User Controller.
- */
-class UserController extends Controller
+class ProcedureController extends Controller
 {
-    private IUserService $userService;
+    private IProcedureService $procedureService;
 
     /**
      * Display a listing of the resource.
      *
-     * @param \App\Interfaces\IUserService $userService InterfaceUserService
+     * @param \App\Interfaces\IProcedureService $procedureService InterfaceProcedureService
      */
-    public function __construct(IUserService $userService)
+    public function __construct(IProcedureService $procedureService)
     {
-        $this->userService = $userService;
+        $this->procedureService = $procedureService;
     }
     
     public function index()
     {
         try {
-            $response['body'] = $this->userService->all();
+            $response['body'] = $this->procedureService->all();
             $response['status'] = (!empty($response['status']) ? $response['status'] : 200);
         } catch (\Throwable $ex) {
             $response['body']['message'] = $ex->getMessage();
@@ -43,7 +40,7 @@ class UserController extends Controller
         try {
             $request->validate($this->rules(), $this->messages());
 
-            $response['body'] = $this->userService->store($request->all());
+            $response['body'] = $this->procedureService->store($request->all());
             $response['status'] = (!empty($response['status']) ? $response['status'] : 201);
         } catch (\Throwable $ex) {
             $response['body']['message'] = $ex->getMessage();
@@ -59,7 +56,7 @@ class UserController extends Controller
     public function show($id)
     {
         try {
-            $response['body'] = $this->userService->show($id);
+            $response['body'] = $this->procedureService->show($id);
             $response['status'] = (!empty($response['status']) ? $response['status'] : 200);
         } catch (\Throwable $ex) {
             $response['body']['message'] = $ex->getMessage();
@@ -85,7 +82,7 @@ class UserController extends Controller
     
             $request->validate($rules, $this->messages());
 
-            $response['body'] = $this->userService->update($request->all(), $id);
+            $response['body'] = $this->procedureService->update($request->all(), $id);
             $response['status'] = (!empty($response['status']) ? $response['status'] : 200);
         } catch (\Throwable $ex) {
             $response['body']['message'] = $ex->getMessage();
@@ -101,7 +98,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         try {
-            $response['body'] = $this->userService->destroy($id);
+            $response['body'] = $this->procedureService->destroy($id);
             $response['status'] = (!empty($response['status']) ? $response['status'] : 200);
         } catch (\Throwable $ex) {
             $response['body']['message'] = $ex->getMessage();
@@ -115,8 +112,8 @@ class UserController extends Controller
     {
         return [
             'name' => 'required|min:2|max:80',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'required|min:4|max:32'
+            'value' => 'required|numeric|min:0',
+            'percent' => 'required|numeric|between:0,1'
         ];
     }
 
@@ -127,13 +124,13 @@ class UserController extends Controller
             'name.min' => 'O nome deve ter, pelo menos, 2 caracteres!',
             'name.max' => 'O nome deve ter, no máximo, 80 caracteres!',
 
-            'email.required' => 'O campo e-mail é obrigatório!',
-            'email.email' => 'O campo e-mail está fora do formato esperado!',
-            'email.unique' => 'O e-mail informado já está cadastrado!',
+            'value.required' => 'O campo valor é obrigatório!',
+            'value.numeric' => 'O campo valor é inválido!',
+            'value.min' => 'O campo valor não pode ser menor do que R$ 0,00!',
 
-            'password.required' => 'O campo senha é obrigatório!',
-            'password.min' => 'A senha deve ter, pelo menos, 4 caracteres!',
-            'password.max' => 'A senha deve ter, no máximo, 32 caracteres!'
+            'percent.required' => 'O campo comissão percentual é obrigatório!',
+            'percent.numeric' => 'O campo comissão percentual é inválido!',
+            'percent.between' => 'O campo comissão percentual deve ser entre 0% e 100%!',
         ];
     }
 }
