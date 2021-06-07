@@ -77,6 +77,8 @@ class AppointmentService implements IAppointmentService
         }
 
         $appointment['procedures'] = $appointment->procedures;
+        $appointment['user'] = $appointment->user;
+        $appointment['professional'] = $appointment->professional;
 
         return $appointment;
     }

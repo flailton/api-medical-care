@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Repositories\UserRepository;
+use App\Services\UserService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -15,7 +18,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth.jwt', ['except' => ['login']]);
+        $this->middleware('auth.jwt', ['except' => ['login', 'register']]);
     }
 
     public function login(Request $request)
@@ -62,7 +65,8 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => $this->guard('api')->factory()->getTTL() * 60
+            'expires_in' => $this->guard('api')->factory()->getTTL() * 60,
+            'user' => self::guard('api')->user()->id
         ]);
     }
 
@@ -74,5 +78,17 @@ class AuthController extends Controller
     public function guard($guard = 'api')
     {
         return Auth::guard($guard);
+    }
+
+    /**
+     * User register.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function register(Request $request)
+    {
+        return (new UserService(new UserRepository(new User())))->store($request->all());
     }
 }
