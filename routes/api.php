@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api;
 
 Route::post('auth/login', [Api\AuthController::class, 'login']);
+Route::post('auth/register', [Api\AuthController::class, 'register']);
 
 Route::group(['middleware' => 'auth.jwt'], function () {
     Route::apiResource('appointments', Api\AppointmentController::class);

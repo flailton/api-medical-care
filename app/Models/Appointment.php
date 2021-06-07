@@ -37,4 +37,20 @@ class Appointment extends Model
     {
         return $this->belongsToMany(Procedure::class);
     }
+
+    /**
+     * Get the user associated with the appointment.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the professional associated with the appointment.
+     */
+    public function professional()
+    {
+        return $this->belongsTo(Professional::class);
+    }
 }
